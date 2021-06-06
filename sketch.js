@@ -9,6 +9,8 @@ var lastFed
 var sleep
 var grass
 var wash
+var gameState=0
+var sad
 
 function preload()
 {
@@ -18,6 +20,7 @@ function preload()
   sleep=loadImage("Bed Room.png")
   grass=loadImage("Garden.png")
   wash=loadImage("Wash Room.png")
+  sad=loadImage("sadDog.png")
 }
 
 function setup() {
@@ -25,7 +28,6 @@ function setup() {
   database=firebase.database()
 
   doge=createSprite(750,250,10,10)
-  doge.addImage(dog)
   doge.scale=0.3
 
   food1=new Food()
@@ -43,17 +45,32 @@ function setup() {
   addFood.position(800,30)
   addFood.mousePressed(addFoods)
 
+  food1.getFoodStock()
   //foodStock.on("value",readStock)
 }
 
 function draw() {  
   background(46,139,87)
 
-  food1.getFoodStock()
-  //console.log(foodStock)
+  console.log(foodStock)
+
+  currentTime=hour()
+  if(currentTime==(lastFed+1)){
+    update("playing")
+    food1.garden()
+  }else if(currentTime==(lastFed+2)){
+    update("sleeping")
+    food1.bedroom()
+  }else if(currentTime>(lastFed+2) && currentTime<=(lastFed+4)){
+    update("bathing")
+    food1.washroom()
+  }else {
+    update("Hungry")
+    doge.addImage(dog)
+    food1.display()
+  }
   //food1.updateFoodStock(foodStock)
   //food1.deductFood()
-  food1.display()
 
   drawSprites();
   lastFedRef=database.ref("lastEaten")
@@ -63,37 +80,21 @@ function draw() {
   //add styles here
   fill("white")
 
-  if(gameState!="Hungry"){
+  if(gameState!=="Hungry"){
     feed.hide()
     addFood.hide()
-    dog.remove()
   }else{
     feed.show()
     addFood.show()
-    dog.addImage("sadDog.png")
+    //doge.addImage(dog)
   }
 
   if(lastFed>=12){
-    text("Last Feed : "+ lastFed%112+" PM",350,40)
+    text("Last Feed : "+ lastFed%12+" PM",350,40)
   }else if(lastFed==0){
     text("Last Feed : 12 AM",350,40)
   }else{
     text("Last Feed : "+ lastFed + " AM",350,40)
-  }
-
-  currentTime=hour()
-  if(currentTime==(lastFed+1)){
-    update("playing")
-    food1.garden()
-  }else if(currentTime==(lastFed+2)){
-    update("sleeping")
-    food1.bedroom()
-  }else if(currentTime>(lastFed+2) && currentTime<=(last+4)){
-    update("bathing")
-    food1.washroom()
-  }else {
-    update("Hungry")
-    food1.display()
   }
 
   //text("Note: press UP_ARROW Key To Feed Drago Milk!",100,40)

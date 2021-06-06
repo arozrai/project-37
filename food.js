@@ -5,7 +5,7 @@ class Food{
   getFoodStock(){
     var foodStockRef=database.ref("food")
     //console.log(foodStockRef)
-    foodStockRef.on("value",function(data){
+    foodStockRef.on("value",(data)=>{
       foodStock=data.val()
     })
     console.log(foodStock)
@@ -13,7 +13,7 @@ class Food{
   updateFoodStock(foodData){
     console.log(foodData)
     database.ref('/').update({
-      'food':foodData
+      food:foodData
     })
   }
   deductFood(foodStock){
@@ -41,12 +41,12 @@ class Food{
     }
   }
   bedroom(){
-    background(sleep,550,500)
+    background(sleep)
   }
   garden(){
-    background(grass,550,500)
+    background(grass)
   }
   washroom(){
-    background(wash,550,500)
+    background(wash)
   }
 }
