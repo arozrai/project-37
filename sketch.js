@@ -28,6 +28,7 @@ function setup() {
   database=firebase.database()
 
   doge=createSprite(750,250,10,10)
+  doge.addImage(dog)
   doge.scale=0.3
 
   food1=new Food()
@@ -51,6 +52,7 @@ function setup() {
 
 function draw() {  
   background(46,139,87)
+  drawSprites();
 
   console.log(foodStock)
 
@@ -66,13 +68,12 @@ function draw() {
     food1.washroom()
   }else {
     update("Hungry")
-    doge.addImage(dog)
+    //doge.addImage(dog)
     food1.display()
   }
   //food1.updateFoodStock(foodStock)
   //food1.deductFood()
 
-  drawSprites();
   lastFedRef=database.ref("lastEaten")
   lastFedRef.on("value",function(data){
     lastFed=data.val()
